@@ -12,7 +12,7 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
 	const [isNotificationShow, setNotificationShow] = useState(false);
 
-	const { isDarkMode } = useDarkMode();
+	const { isDarkMode, toggle } = useDarkMode();
 
 	const [notifications, setNotifications] = useState<Notification[]>([
 		{ title: 'mohamed added task', id: '2323', user: 'adsa', isRead: false },
@@ -39,7 +39,7 @@ export default function Layout({ children }: LayoutProps) {
 				showNotification={showNotification}
 				notifications={notifications.filter((notification) => !notification.isRead)}
 			/>
-			<Sidebar />
+			<Sidebar isDarkMode={isDarkMode} toggle={toggle} />
 			<NotificationPopup
 				// closeNotification={closeNotification}
 				isNotificationShow={isNotificationShow}

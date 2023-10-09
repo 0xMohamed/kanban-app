@@ -1,6 +1,6 @@
 import { Notification } from '@/types/types';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useClickOutside } from '@/hooks/useOnClickOutside';
+// import { useClickOutside } from '@/hooks/useOnClickOutside';
 
 interface NotificationPopupProps {
 	isNotificationShow: boolean;

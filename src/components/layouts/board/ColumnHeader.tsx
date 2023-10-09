@@ -23,7 +23,9 @@ export default function ColumnHeader({ title }: ColumnHeaderProps) {
 	};
 
 	const close = () => {
-		setIsDropdownOpen(false);
+		if (isDropdownOpen) {
+			setIsDropdownOpen(false);
+		}
 	};
 
 	useClickOutside(dropDownRef, close);

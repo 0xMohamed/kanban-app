@@ -8,7 +8,7 @@ export function useClickOutside<T extends HTMLElement = HTMLElement>(
 ) {
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
-			event.preventDefault();
+			// event.preventDefault();
 
 			if (elementRef && elementRef.current && !elementRef.current?.contains(event.target as Node)) {
 				// Call Callback only if event happens outside element or descendent elements
