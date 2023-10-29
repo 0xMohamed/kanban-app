@@ -32,15 +32,19 @@ interface SubTask {
 	complete: boolean;
 }
 
-interface User {
-	id: string;
+interface NameUser {
 	firstName: string;
 	lastName: string;
+}
+
+interface User extends NameUser {
+	id: string;
 }
 
 export interface Notification {
 	id: string;
 	title: string;
-	user: string;
+	discription: string;
+	user: NameUser;
 	isRead: boolean;
 }

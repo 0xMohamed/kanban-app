@@ -74,7 +74,7 @@ export default function Task({ task, index }: TaskProps) {
 								{task.users.map((user) => {
 									return (
 										<Avatar
-											userId={user.id}
+											id={user.id}
 											value={user.firstName + ' ' + user.lastName}
 											small
 											key={user.id}

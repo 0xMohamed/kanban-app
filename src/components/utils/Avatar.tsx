@@ -3,12 +3,14 @@ import { useDarkMode } from 'usehooks-ts';
 
 interface AvatarProps {
 	value: string;
-	userId: string;
+	id: string;
 	// radius?: boolean;
 	// border?: boolean;
 	// shadow?: boolean;
 	small?: boolean;
+	medium?: boolean;
 	hover?: boolean;
+	border?: boolean;
 }
 
 function getInitials(value: string): string | null {
@@ -57,7 +59,7 @@ function getContrastColor(color: string) {
 	return luminance > 0.5 ? '#000000' : '#ffffff';
 }
 
-export default function Avatar({ value, small, hover, userId }: AvatarProps) {
+export default function Avatar({ value, small, medium, hover, id, border = true }: AvatarProps) {
 	const name = getInitials(value);
 	const { isDarkMode } = useDarkMode();
 
@@ -67,21 +69,23 @@ export default function Avatar({ value, small, hover, userId }: AvatarProps) {
 	return (
 		<div>
 			<div
-				className={`flex items-center justify-center rounded-full border-2 ${
+				className={`flex items-center justify-center rounded-full ${border ? 'border-2' : ''} ${
 					isDarkMode ? 'border-dark-2' : 'border-white'
 				} transition-[border] duration-300 hover:cursor-pointer ${
 					hover ? 'hover:border-[#1E1F25]' : ''
-				} ${small ? 'h-7 w-7 text-[0.5rem]' : 'h-10 w-10 text-xs'} `}
+				} ${small ? 'h-7 w-7 text-[0.5rem]' : 'h-10 w-10 text-xs'} 
+				${medium ? 'h-8 w-8 text-[0.65rem]' : 'h-10 w-10 text-xs'}
+				`}
 				style={{
 					backgroundColor: '#' + intToRGB(hashCode(value)),
 					color: getContrastColor(intToRGB(hashCode(value))),
 				}}
-				data-tooltip-id={'user-tooltip-' + userId}
+				data-tooltip-id={'user-tooltip-' + id}
 			>
-				<span>{name}</span>
+				<span className='uppercase'>{name}</span>
 			</div>
 			{hover ? (
-				<ReactTooltip id={'user-tooltip-' + userId} place='top' className='!px-2 !py-1 !text-xs'>
+				<ReactTooltip id={'user-tooltip-' + id} place='top' className='!px-2 !py-1 !text-xs'>
 					{value}
 				</ReactTooltip>
 			) : null}

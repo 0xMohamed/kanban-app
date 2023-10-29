@@ -13,12 +13,12 @@ function App() {
 	return (
 		<div className='overflow-hidden'>
 			<Provider store={store}>
-				<Layout>
-					<Routes>
-						<Route path='/' element={<Home />} />
-						<Route path='/board' element={<Board />} />
-					</Routes>
-				</Layout>
+				<Routes>
+					<Route path='/' element={<Home />} />
+					<Route path={'/board/*'} element={<Layout />}>
+						<Route path=':boardId' element={<Board />} />
+					</Route>
+				</Routes>
 				<ModalManager />
 			</Provider>
 		</div>
