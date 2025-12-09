@@ -1,8 +1,10 @@
 import Avatar from '@/components/utils/Avatar';
 import Popup from '@/components/utils/Popup';
 import { useClickOutside } from '@/hooks/useOnClickOutside';
-import { useAppDispatch } from '@/store/hooks';
-import { openModal } from '@/store/modalSlice';
+
+import { useModalStore } from '@/store/modal';
+import { useUsersStore } from '@/store/users';
+import { User } from '@/types/types';
 import { useRef, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { FaPlus } from 'react-icons/fa6';
@@ -16,29 +18,22 @@ interface BoardHeaderProps {
 
 export default function BoardHeader({ boardTitle, boardIcon }: BoardHeaderProps) {
 	const { isDarkMode } = useDarkMode();
-	const dispatch = useAppDispatch();
-
 	const [isInvitePopup, setIsIetinvPopupite] = useState(false);
 
-	const users = [
-		{ firstName: 'Margaret', lastName: 'Hamilton', id: '1' },
-		{ firstName: 'Nicolas', lastName: 'Lambert', id: '2' },
-		{ firstName: 'Mahmoud', lastName: 'Fahim', id: '3' },
-		{ firstName: 'Moaaz', lastName: 'Gouda', id: '4' },
-	];
+	const { users } = useUsersStore();
 	const invitePopup = useRef(null);
 
 	useClickOutside(invitePopup, () => setIsIetinvPopupite(false));
 
 	return (
-		<div className='flex items-center justify-between px-8'>
+		<div className='flex items-center justify-between px-8 pb-4 shadow-sm'>
 			<div className='flex items-center gap-x-2 text-3xl'>
 				{boardIcon ? <span>{boardIcon}</span> : null}
 				<h2>{boardTitle}</h2>
 			</div>
 			<div className='flex items-center'>
 				<div className='flex -space-x-2.5'>
-					{users.map((user) => {
+					{users.slice(0, 4).map((user: User) => {
 						return (
 							<Avatar
 								value={user.firstName + ' ' + user.lastName}
@@ -49,7 +44,11 @@ export default function BoardHeader({ boardTitle, boardIcon }: BoardHeaderProps)
 						);
 					})}
 				</div>
-				<span className={`mx-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>+6</span>
+				{users.length > 4 ? (
+					<span className={`mx-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>
+						+{users.length - 4}
+					</span>
+				) : null}
 				<div className='relative' ref={invitePopup}>
 					<button
 						onClick={() => setIsIetinvPopupite((prev) => !prev)}

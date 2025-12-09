@@ -1,4 +1,5 @@
-import { Droppable } from '@hello-pangea/dnd';
+import { useDroppable } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import Task from './Task';
 import ColumnHeader from './ColumnHeader';
 import { Column as Col } from '@/types/types';
@@ -8,20 +9,25 @@ interface ColumnProps {
 }
 
 export default function Column({ column }: ColumnProps) {
+	const { setNodeRef } = useDroppable({
+		id: `column-${column.id}`,
+	});
+	console.log(column.tasks);
+
 	return (
 		<div className='space-y-4'>
-			<ColumnHeader title={column.title} />
-			<Droppable droppableId={column.id.toString()}>
-				{(provided, snapshot) => {
-					return (
-						<div ref={provided.innerRef} {...provided.droppableProps} className='space-y-4'>
-							{column.tasks.map((task, index) => {
-								return <Task key={task.id} task={task} index={index} />;
-							})}
-						</div>
-					);
-				}}
-			</Droppable>
+			<ColumnHeader title={column.title} columnId={column.id} />
+
+			<SortableContext
+				items={column.tasks.map((t) => `task-${t.id}`)}
+				strategy={verticalListSortingStrategy}
+			>
+				<div className='space-y-4' ref={setNodeRef}>
+					{column.tasks.map((task) => (
+						<Task key={task.id} task={task} columnId={column.id} />
+					))}
+				</div>
+			</SortableContext>
 		</div>
 	);
 }

@@ -1,6 +1,7 @@
 interface Board {
 	id: string;
 	title: string;
+	icon: string;
 	columns: Column[];
 }
 
@@ -19,6 +20,7 @@ export interface Task {
 	users: User[];
 	subTasks: SubTask[];
 	tags: Tag[];
+	aspectRatio: string;
 }
 
 interface Tag {

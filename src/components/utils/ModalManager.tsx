@@ -1,18 +1,15 @@
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import InviteUser from '../layouts/modal/InviteUser';
+import { useModalStore } from '@/store/modal';
+
 import Modal from '../layouts/modal/Modal';
-import AddTask from '../layouts/modal/AddTask';
-import NewColumn from '../layouts/modal/NewColumn';
-import NewBoard from '../layouts/modal/NewBoard';
+import EditColumn from '../layouts/modal/EditColumn';
 import Task from '../layouts/modal/Task';
+import TaskForm from '../layouts/modal/TaskForm';
 
 export default function ModalManager() {
-	const { isOpen, componentName } = useAppSelector((state) => state.modal);
+	const { isOpen, componentName, close } = useModalStore();
 	const componentsLookUp = {
-		InviteUser,
-		AddTask,
-		NewColumn,
-		NewBoard,
+		TaskForm,
+		EditColumn,
 		Task,
 	};
 

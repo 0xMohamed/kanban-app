@@ -1,120 +1,134 @@
-import { useState } from 'react';
-import { DragDropContext, DropResult } from '@hello-pangea/dnd';
+import { useMemo, useState } from 'react';
+import {
+	DndContext,
+	closestCenter,
+	PointerSensor,
+	KeyboardSensor,
+	useSensor,
+	useSensors,
+	DragOverlay,
+	pointerWithin,
+} from '@dnd-kit/core';
+
 import Column from '@/components/layouts/board/Column';
-import { useAppDispatch } from '@/store/hooks';
-import NewColumnButton from '../components/layouts/board/NewColumnButton';
-// import { Board } from '@/types/types';
-import { useDarkMode } from 'usehooks-ts';
+import NewColumnButton from '@/components/layouts/board/NewColumnButton';
 import BoardHeader from '@/components/layouts/board/BoardHeader';
+import { useDarkMode } from 'usehooks-ts';
+import { useParams } from 'react-router-dom';
+import { useBoardsStore } from '@/store/boards';
+import { Task as T } from '@/types/types';
+import Task from '@/components/layouts/board/Task';
 
 export default function Board() {
-	const board = {
-		id: '123',
-		title: 'hello world',
-		icon: '🔥',
-		columns: [
-			{
-				id: '21',
-				title: 'backlog',
-				tasks: [
-					{
-						id: '33',
-						tags: [{ title: 'design', color: 'blue' }],
-						image:
-							'https://images.unsplash.com/photo-1629277152917-966a1f1705cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2832&q=80',
-						title: 'Create styleguide foundation',
-						description: 'Create content for peceland App',
-						subTasks: [{ id: '1242', title: 'bla bal', complete: true }],
-						date: 'Aug 20, 2021',
-						users: [],
-					},
-					{
-						id: '43',
-						tags: [{ title: 'design', color: 'blue' }],
-						image: 'https://images2.alphacoders.com/118/1182523.jpg',
-						title: 'Design System',
-						description:
-							'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptates ducimus blanditiis ipsum aperiam sit!',
-						subTasks: [{ id: '1242', title: 'bla bal', complete: false }],
-						date: 'Aug 23, 2021',
-						users: [],
-					},
-				],
-			},
-			{
-				id: '22',
-				title: 'to do',
-				tasks: [
-					{
-						id: '67',
-						tags: [{ title: 'design', color: 'blue' }],
-						image:
-							'https://www.shl.com/assets/blog-featured-images/abstract-UN059__FocusFillMaxWyIwLjAwIiwiMC4wMCIsMTkyMCw4NDld.png',
-						title: 'Copywriting Content',
-						description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-						subTasks: [{ id: '1242', title: 'bla bal', complete: false }],
-						date: 'Aug 13, 2021',
-						users: [],
-					},
-				],
-			},
-			{
-				id: '23',
-				title: 'in progress',
-				tasks: [
-					{
-						id: '55',
-						tags: [{ title: 'design', color: 'blue' }],
-						image:
-							'https://images.unsplash.com/photo-1633837018163-3d3f09dec30d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2864&q=80',
-						title: 'Update support documentation',
-						description: 'Lorem ipsum dolor sit, amet consectetur adipisicing.',
-						subTasks: [{ id: '1242', title: 'bla bal', complete: true }],
-						date: 'Aug 23, 2021',
-						users: [],
-					},
-				],
-			},
-			{ id: '24', title: 'review', tasks: [] },
-			{ id: '25', title: 'done', tasks: [] },
-		],
-	};
+	const { boardId } = useParams();
+	const { getBoardById, updateBoard } = useBoardsStore();
 
+	const board = getBoardById(boardId!);
 	const { isDarkMode } = useDarkMode();
+	const [activeTask, setActiveTask] = useState<T | null>(null);
 
-	const onDragEnd = (result: DropResult) => {
-		console.log(result);
-		setIsDraging(false);
+	const sensors = useSensors(
+		useSensor(PointerSensor, {
+			activationConstraint: {
+				distance: 5,
+			},
+		}),
+	);
+
+	if (!board) return <div>Board not found</div>;
+
+	const handleDragStart = (event: any) => {
+		const taskId = event.active.id.replace('task-', '');
+		const task = board!.columns.flatMap((c) => c.tasks).find((t) => t.id === taskId);
+
+		setActiveTask(task || null);
 	};
 
-	const [isDraging, setIsDraging] = useState(false);
+	const handleDragEnd = (event: any) => {
+		const { active, over } = event;
+		setActiveTask(null);
+		if (!over) return;
 
-	const onDragStart = () => {
-		setIsDraging(true);
+		const activeId = active.id.replace('task-', '');
+		const overId = over.id;
+
+		// Find source column
+		const sourceColumn = board.columns.find((col) => col.tasks.find((t) => t.id === activeId));
+
+		if (!sourceColumn) return;
+
+		// Find destination column
+		let destColumn;
+		let destIndex = 0;
+
+		console.log(overId);
+
+		if (overId === 'new-column') {
+			destColumn = {
+				id: crypto.randomUUID(),
+				title: 'New Column',
+				tasks: [],
+			};
+			destIndex = board.columns.length + 1;
+			board.columns.push(destColumn);
+		}
+
+		if (overId.startsWith('column-')) {
+			destColumn = board.columns.find((c) => c.id === overId.replace('column-', ''));
+			if (!destColumn) return;
+			destIndex = destColumn.tasks.length;
+		}
+
+		if (overId.startsWith('task-')) {
+			const taskId = overId.replace('task-', '');
+			destColumn = board.columns.find((c) => c.tasks.find((t) => t.id === taskId));
+			if (!destColumn) return;
+			destIndex = destColumn.tasks.findIndex((t) => t.id === taskId);
+		}
+
+		const activeIndex = sourceColumn.tasks.findIndex((t) => t.id === activeId);
+		const [moved] = sourceColumn.tasks.splice(activeIndex, 1);
+		destColumn?.tasks.splice(destIndex, 0, moved);
+
+		updateBoard(boardId!, board);
 	};
 
 	return (
 		<div
-			className={`h-full space-y-8 p-8 pl-56 pr-0 capitalize ${
+			className={`flex h-full flex-col overflow-auto pb-2 pl-56 pr-0 pt-8 capitalize ${
 				isDarkMode ? 'text-white' : 'text-black'
 			}`}
 		>
 			<BoardHeader boardTitle={board.title} boardIcon={board.icon} />
-			<DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
+			<DndContext
+				sensors={sensors}
+				collisionDetection={closestCenter}
+				onDragStart={handleDragStart}
+				onDragEnd={handleDragEnd}
+			>
 				<div
 					style={{
 						gridTemplateColumns: 'repeat(auto-fill,minmax(16.5rem,1fr))',
 						gridAutoFlow: 'column',
 						gridAutoColumns: 'minmax(16.5rem,1fr)',
 					}}
-					className='no-scrollbar grid min-h-screen gap-x-6 overflow-auto px-8'
+					className='no-scrollbar grid gap-x-6 overflow-auto px-8 pt-4'
 				>
-					{board.columns.map((column) => {
-						return <Column key={column.id} column={column} />;
-					})}
+					{board.columns.map((column) => (
+						<Column key={column.id} column={column} />
+					))}
 					<NewColumnButton />
 				</div>
-			</DragDropContext>
+
+				<DragOverlay
+					dropAnimation={{
+						duration: 250,
+						easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+					}}
+				>
+					{activeTask ? <Task task={activeTask} overlay /> : null}
+				</DragOverlay>
+			</DndContext>
 		</div>
 	);
 }

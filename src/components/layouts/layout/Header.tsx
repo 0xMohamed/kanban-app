@@ -23,7 +23,7 @@ export default function Header({
 
 	return (
 		<header
-			className={`ml-auto mr-2 mt-2 flex w-[calc(100%-15.5rem)] items-center justify-center rounded-lg ${
+			className={`ml-auto mr-2 mt-2 flex w-[calc(100%-15.5rem)] items-center justify-center rounded-lg shadow-sm ${
 				isDarkMode ? 'bg-dark-2' : 'bg-white'
 			} px-6 py-4`}
 		>

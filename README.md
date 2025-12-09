@@ -1,95 +1,109 @@
-# Inro: BRD Project
+# Kanban App
 
-`Brd` is the most simple web builder because, at the beginning, we recommend that you answer some questions to help you get the perfect template for you.
+## Description
 
-And you can choose any section from the library, and you can replace the selected theme with another.
+Kanban App is a modern, user-friendly web application for managing tasks and projects using the Kanban methodology. It allows individuals and teams to organize work into boards, columns, and tasks, visualize progress, and collaborate efficiently. The app supports multiple boards, customizable columns, drag-and-drop task management, and more.
 
-**Data visualization** is one of our most important goals because we provide the perfect tool to customize your chart.
-You can choose and replace between many charts, upload or link your data, separate the cycle of a chart into many scenes, and be controlled by two different types of actions.
+## Features
 
-## Getting Started with scripts of the poject
+- **Multiple Boards**: Create and manage multiple project boards, each with its own columns and tasks.
+- **Customizable Columns**: Add, rename, or remove columns (e.g., Backlog, To Do, In Progress, Review, Done) to fit your workflow.
+- **Task Management**: Add, edit, and delete tasks within columns. Tasks support descriptions, tags, subtasks, due dates, and user assignments.
+- **Drag-and-Drop**: Move tasks between columns or reorder them within a column using intuitive drag-and-drop powered by dnd-kit.
+- **Board Overview**: View all your boards at a glance from the Home page, including key stats (columns, tasks).
+- **Dark/Light Mode**: Toggle between dark and light themes for comfortable viewing.
+- **Responsive Design**: Fully responsive layout for desktop and mobile devices.
+- **Quick Add**: Easily add new boards, columns, and tasks with minimal clicks.
+- **Rich UI Components**: Utilizes a modern component library and icon set for a polished user experience.
 
-`npm run start`
 
-Runs the app in the development mode in [http://localhost:3000](http://localhost:3000).
+## Technologies & Libraries
 
-`npm run test`
+### Front-end
+- **React**: For building user interfaces
+- **TypeScript**: Type-safe JavaScript
+- **Vite**: Fast and modern build tool
+- **React Router DOM**: Client-side routing
 
-Launches the test runner in the interactive watch mode.
+### State Management
+- **Zustand**: Lightweight state management
 
-`npm run build`
+### Styling & UI
+- **Tailwind CSS**: Utility-first CSS framework
+- **React Icons**: Icon library
 
-Builds the app for production to the `build` folder.
+### Features & Utilities
+- **dnd-kit**: Drag-and-drop toolkit
+- **React Hook Form**: Form management
+- **usehooks-ts**: Useful React hooks
+- **Jest**: Testing framework
+- **Prettier & ESLint**: Code formatting and linting
 
-`npm run serve-project`
+## Installation
 
-Runs a fake project in [http://localhost:8000](http://localhost:8000).
+1. **Clone the repository:**
+   ```sh
+   git clone https://github.com/0xMohamed/kanban-app.git
+   cd kanban-app
+   ```
+2. **Install dependencies:**
+   ```sh
+   npm install
+   # or
+   yarn install
+   ```
+3. **Run the app locally:**
+   ```sh
+   npm run start
+   # or
+   yarn start
+   ```
+   The app will be available at [http://localhost:3000](http://localhost:3000).
 
-`npm run serve-mode1`
+4. **Build for production:**
+   ```sh
+   npm run build
+   # or
+   yarn build
+   ```
 
-Runs a simple stylesheet to be a theme in [http://localhost:8500](http://localhost:8500).
+5. **Run tests:**
+   ```sh
+   npm run test
+   # or
+   yarn test
+   ```
 
-## Content Of the project
+## Usage
 
-1. Main routes/pages of the project
+1. **Home Page:**
+   - View all your boards and create a new board.
+2. **Board Page:**
+   - View columns and tasks for the selected board.
+   - Drag and drop tasks between columns.
+   - Add new columns or tasks as needed.
+   - Click a task to view and edit details (description, tags, subtasks, etc.).
+3. **Dark/Light Mode:**
+   - Toggle the theme using the UI switch.
 
-   - **/dashboard**:
-     there is a list of user projects and their settings.
+_Example:_
+- Create a new board for your project.
+- Add columns such as "Backlog", "To Do", "In Progress", "Review", and "Done".
+- Add tasks to columns, set descriptions, assign users, and use drag-and-drop to move tasks as work progresses.
 
-   - **/edit**:
-     main panels:
+## Contributing
 
-     - Top panel: main header with some settings like preview and publish and
-       collaborators and invite button in the right side of the header, insert dropdown for insert `section` or `page` or `group`, and switch themes dropdown and back to dashboard in the left side of the header, and user project name in the middle of the header.
+Contributions are welcome! To contribute:
 
-     - left panel:
-       there are two view panels. The first is user project content like pages and sections of page, and the second is inserting new content like `page` or `group` or `section` and filtering between him.
+1. Fork the repository
+2. Create a new branch (`git checkout -b feature/your-feature-name`)
+3. Make your changes
+4. Commit your changes (`git commit -m 'Add new feature'`)
+5. Push to the branch (`git push origin feature/your-feature-name`)
+6. Open a Pull Request
 
-     - right panel:
-       the main functionality is editing section elements and there are many components for each element because each element has different settings.
+Please follow the existing code style, write clear commit messages, and add tests for new features when possible.
 
-     - board panel:
-       here is all of the project content live with some settings in the section frame **Component**.
+## License
 
-   - **/preview**: specifically user template without any editor components.
-
-## Technologies used in the project
-
-### packeges
-
-- Styling:
-
-  - tailwind css : used in the panels of the project.
-
-- State management:
-
-  - redux toolkit:
-
-- 2D Visuals | Charts:
-
-  - d3:
-  - visx:
-
-- 3D:
-
-  - react-three/fiber:
-
-- Table:
-
-  - handsontable:
-
-- Router:
-
-  - react-router:
-
-- Icons:
-  - react-icons:
-
-## Todos
-
-- Multiple views in **Visual** element.
-- Group of pages > to switch between pages by navigation.
-- Collaboration system between users with permissions and roles.
-- Sepatred react-app to publish **NPM** package with all renders `Components` as JSX.
-- Use **Chatgpt** to choose a section from the library and generate content of elements like text and images based on a prompt like input or his previous answers.
-- Separate next-app for deploying user templates and use a `pre-rendering` process like **SSR** or **SSG** or **[framer Technique](https://www.framer.com/learn/pre-rendering/)**.
+This project is licensed under the MIT License.
