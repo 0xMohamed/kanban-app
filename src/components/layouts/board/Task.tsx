@@ -9,7 +9,7 @@ import React from 'react';
 
 interface TaskProps {
 	task: T;
-	columnId?: '';
+	columnId?: string;
 	overlay?: boolean;
 }
 

@@ -12,7 +12,6 @@ export default function Column({ column }: ColumnProps) {
 	const { setNodeRef } = useDroppable({
 		id: `column-${column.id}`,
 	});
-	console.log(column.tasks);
 
 	return (
 		<div className='space-y-4'>
@@ -22,7 +21,7 @@ export default function Column({ column }: ColumnProps) {
 				items={column.tasks.map((t) => `task-${t.id}`)}
 				strategy={verticalListSortingStrategy}
 			>
-				<div className='space-y-4' ref={setNodeRef}>
+				<div className='h-full space-y-4 ' ref={setNodeRef}>
 					{column.tasks.map((task) => (
 						<Task key={task.id} task={task} columnId={column.id} />
 					))}
