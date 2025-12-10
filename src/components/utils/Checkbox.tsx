@@ -1,36 +1,44 @@
-import { useState } from 'react';
-import { BsMoon, BsMoonFill, BsSun, BsSunFill } from 'react-icons/bs';
+import { BsMoonFill, BsSunFill } from 'react-icons/bs';
 
 interface CheckboxProps {
 	checked: boolean;
 	handler: () => void;
-	className: string;
+	className?: string;
 }
 
-export default function Checkbox({ checked, handler, className }: CheckboxProps) {
+export default function Checkbox({ checked, handler, className = '' }: CheckboxProps) {
 	return (
-		<div className='relative w-12'>
-			<label>
-				<input
-					type='checkbox'
-					className={`toggle block bg-gray-400 ${className}`}
-					checked={checked}
-					onChange={handler}
-				/>
+		<label className={`relative inline-block h-6 w-12 ${className}`}>
+			<input
+				type='checkbox'
+				checked={checked}
+				onChange={handler}
+				className='peer absolute h-full w-full cursor-pointer opacity-0'
+			/>
+
+			<span
+				className={`block h-full w-full rounded-full transition-colors duration-300 ${
+					checked ? 'bg-gray-700' : 'bg-yellow-400'
+				}`}
+			></span>
+
+			<span
+				className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-md transition-all duration-300 ${
+					checked ? 'translate-x-6' : 'translate-x-0'
+				}`}
+			>
 				{!checked ? (
 					<BsSunFill
-						className='absolute left-1 top-1/2 -translate-y-1/2 cursor-pointer'
-						size={'0.85rem'}
-						color='black'
+						className='pointer-events-none absolute left-1 top-1/2 -translate-y-1/2 text-yellow-500'
+						size='0.7rem'
 					/>
 				) : (
 					<BsMoonFill
-						className='absolute right-[0.325rem] top-1/2 -translate-y-1/2 cursor-pointer'
-						size={'0.825rem'}
-						color='black'
+						className='pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-gray-800'
+						size='0.7rem'
 					/>
 				)}
-			</label>
-		</div>
+			</span>
+		</label>
 	);
 }
